@@ -21,9 +21,14 @@ namespace CreditCardApplications
             throw new NotImplementedException("Simulate this real dependency being hard to use");
         }
 
+        public bool IsValid(ref string frequentFlyterNumber)
+        {
+            throw new NotImplementedException();
+        }
+
         public void IsValid(string frequentFlyerNumber, out bool isValid)
         {
             throw new NotImplementedException("Simulate this real dependency being hard to use");
-        }
+        }   
     }
 }

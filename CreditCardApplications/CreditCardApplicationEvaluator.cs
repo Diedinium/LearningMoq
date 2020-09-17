@@ -1,4 +1,6 @@
-﻿namespace CreditCardApplications
+﻿using System;
+
+namespace CreditCardApplications
 {
     public class CreditCardApplicationEvaluator
     {
@@ -10,7 +12,7 @@
 
         public CreditCardApplicationEvaluator(IFrequentFlyerNumberValidator flyerValidator)
         {
-            _validator = flyerValidator;
+            _validator = flyerValidator ?? throw new ArgumentNullException(nameof(flyerValidator));
         }
 
         public CreditCardApplicationDecision Evaluate(CreditCardApplication application)
@@ -21,6 +23,60 @@
             }
 
             bool isValidFreqFlyerNum = _validator.IsValid(application.FrequentFlyerNumber);
+
+            if (!isValidFreqFlyerNum)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.Age <= AutoReferralMaxAge)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.GrossAnnualIncome < LowIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoDeclined;
+            }
+
+            return CreditCardApplicationDecision.ReferredToHuman;
+        }
+
+        public CreditCardApplicationDecision EvaluateUsingOut(CreditCardApplication application)
+        {
+            if (application.GrossAnnualIncome >= HighIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoAccepted;
+            }
+
+            _validator.IsValid(application.FrequentFlyerNumber, out var isValidFreqFlyerNum);
+
+            if (!isValidFreqFlyerNum)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.Age <= AutoReferralMaxAge)
+            {
+                return CreditCardApplicationDecision.ReferredToHuman;
+            }
+
+            if (application.GrossAnnualIncome < LowIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoDeclined;
+            }
+
+            return CreditCardApplicationDecision.ReferredToHuman;
+        }
+
+        public CreditCardApplicationDecision EvaluateUsingRef(CreditCardApplication application, ref string freqFlyNum)
+        {
+            if (application.GrossAnnualIncome >= HighIncomeThreshold)
+            {
+                return CreditCardApplicationDecision.AutoAccepted;
+            }
+
+            bool isValidFreqFlyerNum = _validator.IsValid(ref freqFlyNum);
 
             if (!isValidFreqFlyerNum)
             {
