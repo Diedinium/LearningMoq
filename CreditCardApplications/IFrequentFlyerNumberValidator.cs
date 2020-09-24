@@ -9,6 +9,8 @@ namespace CreditCardApplications
         void IsValid(string frequentFlyerNumber, out bool isValid);
         bool IsValid(ref string frequentFlyterNumber);
         ValidationMode ValidationMode { get; set; }
+
+        event EventHandler ValidatorLookupPerformed;
     }
 
     public interface ILicenceData

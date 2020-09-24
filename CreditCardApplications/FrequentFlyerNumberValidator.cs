@@ -23,6 +23,8 @@ namespace CreditCardApplications
             set => throw new NotImplementedException("For demo purposes"); 
         }
 
+        public event EventHandler ValidatorLookupPerformed;
+
         public bool IsValid(string frequentFlyerNumber)
         {
             throw new NotImplementedException("Simulate this real dependency being hard to use");
